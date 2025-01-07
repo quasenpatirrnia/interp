@@ -10,7 +10,7 @@ int isaccepting(DFA *automaton, int state);
 
 int accepts(DFA *automaton, int state, const char *string, int count) {
 	int trans;
-	if ((trans = automaton->transitions[state][(int)*string]) > 0)
+	if ((trans = automaton->transitions[state-1][(int)*string]) > 0)
 		return accepts(automaton, trans-1, string+1, count+1);
 	if (isaccepting(automaton, state))
 		return count;
