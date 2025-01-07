@@ -2,7 +2,6 @@
 
 typedef struct {
 	int **transitions;
-	int size;
 	int *accepting;
 	int acclen;
 } DFA;
