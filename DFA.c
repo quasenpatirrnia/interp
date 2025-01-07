@@ -1,12 +1,7 @@
 #include "alloc.h"
 
 typedef struct {
-	int dest;
-	char transition;
-} DFATransition;
-
-typedef struct {
-	DFATransition **transitions;
+	int **transitions;
 	int size;
 	int *accepting;
 	int acclen;
@@ -15,16 +10,12 @@ typedef struct {
 int isaccepting(DFA *automaton, int state);
 
 int accepts(DFA *automaton, int state, const char *string, int count) {
-	int i = 0;
-	char c;
-	while ((i < automaton->size) && ((c = automaton->transitions[state][i].transition) != string[0]))
-		i++;
-	if (c == string[0])
-		return accepts(automaton, i, string, count+1);
-	else if (isaccepting(automaton, state))
+	int trans;
+	if ((trans = automaton->transitions[state][(int)*string]) > 0)
+		return accepts(automaton, trans-1, string+1, count+1);
+	if (isaccepting(automaton, state))
 		return count;
-	else
-		return 0;
+	return 0;
 }
 
 int isaccepting(DFA *automaton, int state) {
@@ -37,7 +28,7 @@ int isaccepting(DFA *automaton, int state) {
 }
 
 DFA *NewDFA(Arena *parent, int size, int *accepting, int acclen) {
-	DFA *ret = (DFA *)PushToArena(parent, size * size);
+	DFA *ret = (DFA *)PushToArena(parent, sizeof(DFA));
 	ret->accepting = accepting;
 	ret->acclen = acclen;
 	return ret;
