@@ -1,58 +1,4 @@
-typedef struct {
-	char *text;
-	int pos;
-} Scanner;
-
-typedef enum {
-	KEYWORD,
-	IDENTIFIER,
-	CONSTANT,
-	STRINGLITERAL,
-	OPERATOR,
-	PUNCTUATOR,
-	HEADERNAME,
-	PPNUMBER,
-	CHARACTERCONSTANT,
-} TokenType;
-
-typedef enum {
-	AUTO,
-	BREAK,
-	CASE,
-	CHAR,
-	CONST,
-	CONTINUE,
-	DEFAULT,
-	DO,
-	DOUBLE,
-	ELSE,
-	ENUM,
-	EXTERN,
-	FLOAT,
-	FOR,
-	GOTO,
-	IF,
-	INT,
-	LONG,
-	REGISTER,
-	RETURN,
-	SHORT,
-	SIGNED,
-	SIZEOF,
-	STATIC,
-	STRUCT,
-	SWITCH,
-	TYPEDEF,
-	UNION,
-	UNSIGNED,
-	VOID,
-	VOLATILE,
-} Keyword;
-
-typedef struct {
-	TokenType type;
-	char *value;
-} Token;
+#include "alloc.h"
 
 typedef struct {
 	int dest;
@@ -90,5 +36,9 @@ int isaccepting(DFA *automaton, int state) {
 	return 0;
 }
 
-DFA *NewDFA(int states, int *accepting, int acclen) {
-	DFA *
+DFA *NewDFA(Arena *parent, int size, int *accepting, int acclen) {
+	DFA *ret = (DFA *)PushToArena(parent, size * size);
+	ret->accepting = accepting;
+	ret->acclen = acclen;
+	return ret;
+}
