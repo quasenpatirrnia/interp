@@ -24,12 +24,16 @@ int ArenaUsed(Arena *arena) {
 	return (arena->stackptr - arena->content);
 }
 
-void *PushToArena(Arena *arena, int bytes) {
+void *ArenaAlloc(Arena *arena, int bytes) {
 	if ((ArenaUsed(arena) + bytes) > arena->size)
 		return NULL;
 	return(arena->stackptr += bytes);
 }
 
-void FreeArena(Arena *arena, int bytes) {
-	PushToArena(arena, -bytes);
+void FreeArena(Arena *arena, size_t bytes) {
+	PushToArena(arena, -((int) bytes));
+}
+
+void *PushToArena(Arena *arena, size_t bytes) {
+	PushToArena(arena, (int) bytes);
 }
