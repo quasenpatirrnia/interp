@@ -10,8 +10,8 @@ int isaccepting(DFA *automaton, int state);
 
 int accepts(DFA *automaton, int state, const char *string, int count) {
 	int trans;
-	if ((trans = automaton->transitions[state-1][(int)*string]) > 0)
-		return accepts(automaton, trans-1, string+1, count+1);
+	if ((trans = automaton->transitions[state][(int)*string]) > 0)
+		return accepts(automaton, trans, string+1, count+1);
 	if (isaccepting(automaton, state))
 		return count;
 	return 0;
@@ -31,4 +31,8 @@ DFA *NewDFA(Arena *parent, int size, int *accepting, int acclen) {
 	ret->accepting = accepting;
 	ret->acclen = acclen;
 	return ret;
+}
+
+void AddTransition(DFA *automaton, char c, int state1, int state2) {
+	automaton->transitions[state1][c] = state2;
 }
