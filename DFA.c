@@ -26,10 +26,12 @@ int isaccepting(DFA *automaton, int state) {
 	return 0;
 }
 
-DFA *NewDFA(Arena *parent, int accepting[], int acclen) {
+DFA *NewDFA(Arena *parent, int accepting[], int acclen, int transitions[], int size) {
 	DFA *ret = (DFA *)PushToArena(parent, sizeof(DFA));
 	ret->accepting = accepting;
 	ret->acclen = acclen;
+	ret->transitions = transitions;
+	memset(ret->transitions, -1, (size_t)(128 * size));
 	return ret;
 }
 
