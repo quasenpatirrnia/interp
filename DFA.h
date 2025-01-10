@@ -2,7 +2,7 @@
 #define DFA_H
 
 typedef struct {
-	DFATransition **transitions;
+	int *transitions;
 	int size;
 	int *accepting;
 	int acclen;
