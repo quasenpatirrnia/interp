@@ -2,11 +2,6 @@
 #define DFA_H
 
 typedef struct {
-	int dest;
-	char transition;
-} DFATransition;
-
-typedef struct {
 	DFATransition **transitions;
 	int size;
 	int *accepting;
