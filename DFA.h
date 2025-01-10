@@ -14,5 +14,7 @@ typedef struct {
 } DFA;
 
 int accepts(DFA *automaton, int state, const char *string, int count);
+int AddTransition(DFA *automaton, char c, int state1, int state2);
+DFA *NewDFA(Arena *parent, int accepting[], int acclen, int transitions[], int size);
 
 #endif
