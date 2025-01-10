@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "DFA.h"
+#define min(a, b) (((a) > (b)) ? (b) : (a))
+#define max(a, b) (((a) < (b)) ? (b) : (a))
 
 typedef struct {
 	char text[];
@@ -77,10 +79,10 @@ int KeywordMatch(char s[]) {
 	return ret;
 }
 
-int IdentifierMatch(char s[], Arena *parent) {
+int IdentifierMatch(char s[], Arena scratch) {
 	int transitions[2][128];
 	int accepting = 1;
-	DFA *IdentifierDFA = NewDFA(parent, &accepting, 1, transitions, 2);
+	DFA *IdentifierDFA = NewDFA(&scratch, &accepting, 1, transitions, 2);
 	for (char c = 'a'; c <= 'z'; c++) {
 		AddTransition(IdentifierDFA, c, 0, 1);
 		AddTransition(IdentifierDFA, c, 1, 1);
@@ -93,5 +95,16 @@ int IdentifierMatch(char s[], Arena *parent) {
 		AddTransition(IdentifierDFA, c, 0, 1);
 	AddTransition(IdentifierDFA, '_', 1, 1);
 	AddTransition(IdentifierDFA, '_', 0, 1);
-	return accepts(automaton, 0, s, 0);
+	return accepts(IdentifierDFA, 0, s, 0);
 }
+
+int ConstantMatch(char s[], Arena scratch) {
+	int f = FloatingMatch(s, scratch);
+	int n = IntegerMatch(s, scratch);
+	int e = EnumerationMatch(s, scratch);
+	int c = CharacterMatch(s, scatch);
+	return max(max(f, n), max(e, c));
+}
+
+int FloatingMatch(char s[], Arena scratch) {
+	int
